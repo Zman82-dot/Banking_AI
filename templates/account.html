@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body {
+            background-color: #343541;
+            color: #ececf1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .sidebar {
+            width: 350px;
+            background-color: #40414f;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            color: lightgreen;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar input[type="text"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #343541;
+            color: #ececf1;
+            border: 1px solid #565869;
+            border-radius: 5px;
+        }
+
+        .sidebar input[type="submit"] {
+            padding: 10px;
+            background-color: #565869;
+            color: #ececf1;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .sidebar input[type="submit"]:hover {
+            background-color: #6f707c;
+        }
+
+        .sidebar #response {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #565869;
+            border-radius: 5px;
+            min-height: 50px;
+        }
+
+        h1 {
+            text-align: center;
+            color: lightgreen;
+        }
+
+        h2 {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .input-container {
+            display: flex;
+            align-items: center;
+            border: 1px solid #565869;
+            border-radius: 5px;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #40414f;
+        }
+
+        .input-container h5, .input-container h4 {
+            margin: 0;
+            padding: 0 10px;
+        }
+
+        .input-container h4 {
+            color: lightgreen;
+        }
+
+        .form-group label {
+            margin-left: 80px;
+        }
+
+        .form-group select, .form-group input {
+            background-color: #343541;
+            color: whitesmoke;
+            margin-left: 80px;
+        }
+
+        .btn {
+            margin-left: 80px;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <h1>Wood💲tock Financial</h1>
+            <h2>Account Summary</h2><h6 style="text-align:right;"><a href="{{url_for('transaction_history')}}">Transaction History</a></h6>
+
+            <div class="input-container">
+                <h5><b>Checking: </b></h5>
+                <h4><b>${{ checking }}0</b></h4>
+            </div>
+
+            <div class="input-container">
+                <h5><b>Savings: </b></h5>
+                <h4><b>${{ savings }}0</b></h4>
+            </div>
+
+            <h2>Transaction Hub</h2>
+            <div class="input-container">
+                <form method="POST" action="{{ url_for('transaction') }}">
+                    <div class="form-group">
+                        <label for="action"><b>Actions</b></label>
+                        <select id="action" name="action" class="form-control" required>
+                            <option value="deposit_checking">Deposit to Checking</option>
+                            <option value="deposit_savings">Deposit to Savings</option>
+                            <option value="withdraw_checking">Withdraw from Checking</option>
+                            <option value="withdraw_savings">Withdraw from Savings</option>
+                            <option value="transfer_checking_to_savings">Transfer from Checking to Savings</option>
+                            <option value="transfer_savings_to_checking">Transfer from Savings to Checking</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="amount"><b>Amount</b></label>
+                        <input type="number" id="amount" name="amount" class="form-control" placeholder="Enter Amount" step="0.01" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </form>
+            </div>
+
+            <br>
+            {% with messages= get_flashed_messages()%}
+            {% if messages %}
+            <ul>
+                {% for message in messages %}
+                <p><b>{{ message }}</b></p>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% endwith %}
+
+            <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+        </div>
+
+        <!-- Sidebar (Chatbot) -->
+        <div class="sidebar">
+            <h2>Banking Assistant</h2>
+            <form id="chat-form">
+                <input type="text" id="prompt" name="prompt" placeholder="Type your question here...">
+                <input type="submit" value="Submit">
+            </form>
+
+
+            <div id="response"></div>
+
+            <script>
+                $(document).ready(function () {
+                    $('#chat-form').submit(function (event) {
+                        event.preventDefault(); // Prevent form submission
+
+                        var userInput = $('#prompt').val();  // Get user input
+
+                        $.ajax({
+                            url: '/chatbot',
+                            type: 'POST',
+                            data: { prompt: userInput },
+                            success: function (data) {
+                                $('#response').html('<p>' + data.response + '</p>');  // Display response
+                            },
+                            error: function () {
+                                $('#response').html('<p>There was an error processing your request.</p>');
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</body>
+</html>

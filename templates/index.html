@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=10">
+<title>Banking App</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+        body {
+            background-color: #343541;
+            color: #ececf1;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+        }
+        h1{
+            text-align:center;
+        }
+
+        navbar{
+            background-color: #40414f;
+            width: 100%;
+        }
+        .main-content {
+             /* Same as the width of the sidebar */
+            padding: 20px;
+            width: 100%;
+        }
+
+
+
+        .input-container {
+            display: flex;
+            border: 1px solid #565869;
+            border-radius: 5px;
+
+        }
+
+        .input-container input {
+            background-color: #40414f;
+            border: none;
+            color: #ececf1;
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .input-container button {
+            background-color: #19a2fb;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+     </style>
+</head>
+<body>
+    <navbar>
+
+    </nav>
+    <div class="main-content">
+        <h1>Welcome to Wood💲tock Financial</h1>
+
+    </div>
+    <div style="text-align:center">
+        <p>Login</p>
+        <a href="{{url_for('login')}}"><button class="btn btn-success" >Login</button></a><br><br>
+        {% with messages= get_flashed_messages()%}
+        {% if messages%}
+        <ul>
+            {% for message in messages%}
+            <p><b>{{message}}</b></p>
+            {% endfor%}
+        </ul>
+        {%endif%}
+        {%endwith%}
+
+        <p>No account?<a href="{{url_for('register')}}">Register here.</a></p>
+        </div>
+</body>
+</html>
+
