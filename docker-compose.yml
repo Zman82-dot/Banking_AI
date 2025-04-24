@@ -1,9 +1,0 @@
-
-services:
-  bankingai:
-    image: bankingai
-    build:
-      context: .
-      dockerfile: ./Dockerfile
-    ports:
-      - 5002:5002
