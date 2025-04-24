@@ -2,12 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 import sqlite3
 import bcrypt
 import os
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY', ''))
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'secret-key'
-openai.api_key = os.getenv('OPENAI_API_KEY', 'apikey')
 def get_db_connection():
     conn = sqlite3.connect('accounts.db')
     conn.row_factory = sqlite3.Row
@@ -211,12 +212,10 @@ def logout():
     return redirect(url_for('index'))
 
 def get_completion_from_messages(messages, model="gpt-3.5-turbo", temperature=0):
-    response = openai.ChatCompletion.create(
-        model=model,
-        messages=messages,
-        temperature=temperature,
-    )
-    return response.choices[0].message["content"]
+    response = client.chat.completions.create(model=model,
+    messages=messages,
+    temperature=temperature)
+    return response.choices[0].message.content
 
 # Existing banking application routes
 

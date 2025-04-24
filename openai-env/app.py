@@ -7,7 +7,6 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = '1f890437d52010780b49babaf6bd1a27f4d54d1700fb8659'
-openai.api_key = os.getenv('OPENAI_API_KEY', 'sk-nXQH2VQvAGwc8j3Qcp7SxmLq0T3q5fztya6vrzciI0T3BlbkFJjy_S1CWpcv2WTs5XQviUywN6NycjUDT9SZF3Q1JOsA')
 def get_db_connection():
     conn = sqlite3.connect('accounts.db')
     conn.row_factory = sqlite3.Row
